@@ -1,30 +1,58 @@
 "use client";
 
-import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 
 export default function Starred() {
   const [starredCards, setStarredCards] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const savedStarredCards = localStorage.getItem('starredCards');
     if (savedStarredCards) {
-      setStarredCards(JSON.parse(savedStarredCards));
+      const parsedCards = JSON.parse(savedStarredCards);
+      setStarredCards(parsedCards);
+      setLoading(false);
     }
   }, []);
 
+  const handleNext = () => {
+    setLoading(true);
+    setTimeout(() => {
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % starredCards.length);
+      setLoading(false);
+    }, 500);
+  };
+
+  const handlePrevious = () => {
+    setLoading(true);
+    setTimeout(() => {
+      setCurrentIndex((prevIndex) => (prevIndex - 1 + starredCards.length) % starredCards.length);
+      setLoading(false);
+    }, 500);
+  };
+
   return (
-    <div style={{ textAlign: 'center', padding: '50px', fontFamily: 'Arial, sans-serif' }}>
-      <h1>Starred Cards</h1>
-      <ul style={{ listStyleType: 'none', padding: 0, fontSize: '24px' }}>
-        {starredCards.length > 0 ? (
-          starredCards.map((card, index) => <li key={index} style={{ backgroundColor: '#fff', padding: '15px', marginBottom: '10px', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)' }}>{card}</li>)
-        ) : (
-          <li>No starred cards available</li>
-        )}
-      </ul>
-      <div style={{ marginTop: '20px' }}>
-        <Link href="/" style={{ fontSize: '18px', color: '#007BFF', textDecoration: 'none' }}>Back to Random Questions</Link>
+    <div className="text-center p-12 font-sans">
+      <h1 className="text-3xl mb-6 text-green-400">Starred Cards</h1>
+      {loading ? (
+        <div className="flex justify-center items-center h-48">
+          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-green-400"></div>
+        </div>
+      ) : starredCards.length > 0 ? (
+        <div className="relative inline-block w-full max-w-xl p-8 border border-gray-300 shadow-lg rounded-xl bg-white text-xl text-black mb-8">
+          {starredCards[currentIndex]}
+        </div>
+      ) : (
+        <p>No starred cards available</p>
+      )}
+      <div className="mt-4 space-x-4">
+        <button onClick={handlePrevious} className="px-6 py-2 bg-green-400 text-white rounded-lg shadow-md">Previous</button>
+        <button onClick={handleNext} className="px-6 py-2 bg-green-400 text-white rounded-lg shadow-md">Next</button>
+      </div>
+      <div className="mt-8 space-x-4">
+        <Link href="/" className="text-lg text-green-400 hover:underline">Back to Random Questions</Link>
       </div>
     </div>
   );

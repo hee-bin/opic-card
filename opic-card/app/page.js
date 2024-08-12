@@ -43,12 +43,14 @@ export default function Home() {
   const [isRunning, setIsRunning] = useState(false);
   const [transcript, setTranscript] = useState('');
   const [isRecording, setIsRecording] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
     const randomCard = cards[Math.floor(Math.random() * cards.length)];
     setSelectedCard(randomCard);
+    setLoading(false);
 
-    // Retrieve starred cards from localStorage when the component mounts
     const savedStarredCards = localStorage.getItem('starredCards');
     if (savedStarredCards) {
       setStarredCards(JSON.parse(savedStarredCards));
@@ -65,14 +67,8 @@ export default function Home() {
     return () => clearInterval(timer);
   }, [isRunning]);
 
-  const startTimer = () => {
-    setIsRunning(true);
-  };
-
-  const stopTimer = () => {
-    setIsRunning(false);
-  };
-
+  const startTimer = () => setIsRunning(true);
+  const stopTimer = () => setIsRunning(false);
   const resetTimer = () => {
     setIsRunning(false);
     setTimeElapsed(0);
@@ -86,67 +82,61 @@ export default function Home() {
       updatedStarredCards = [...starredCards, selectedCard];
     }
     setStarredCards(updatedStarredCards);
-    localStorage.setItem('starredCards', JSON.stringify(updatedStarredCards)); // Save the updated list to localStorage
+    localStorage.setItem('starredCards', JSON.stringify(updatedStarredCards));
   };
 
-  const toggleRecording = () => {
-    if (isRecording) {
-      stopRecording();
-    } else {
-      startRecording();
-    }
+  const handleNext = () => {
+    setLoading(true);
+    setTimeout(() => {
+      const nextIndex = (currentIndex + 1) % cards.length;
+      setSelectedCard(cards[nextIndex]);
+      setCurrentIndex(nextIndex);
+      setLoading(false);
+    }, 500);
   };
 
-  const startRecording = () => {
-    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-    recognition.interimResults = false;
-    recognition.maxAlternatives = 1;
-    recognition.lang = 'en-US';
-
-    recognition.onresult = function (event) {
-      const newTranscript = event.results[0][0].transcript;
-      setTranscript(newTranscript);
-    };
-
-    recognition.onerror = function (event) {
-      console.error(event.error);
-    };
-
-    recognition.start();
-    setIsRecording(true);
-  };
-
-  const stopRecording = () => {
-    setIsRecording(false);
+  const handlePrevious = () => {
+    setLoading(true);
+    setTimeout(() => {
+      const prevIndex = (currentIndex - 1 + cards.length) % cards.length;
+      setSelectedCard(cards[prevIndex]);
+      setCurrentIndex(prevIndex);
+      setLoading(false);
+    }, 500);
   };
 
   return (
-    <div style={{ textAlign: 'center', padding: '50px', fontFamily: 'Arial, sans-serif' }}>
-      <h1 style={{ fontSize: '36px', marginBottom: '20px' }}>Opic Question</h1>
-      <div style={{ position: 'relative', display: 'inline-block', width: '100%', maxWidth: '600px', padding: '20px', border: '1px solid #ddd', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)', borderRadius: '8px', marginBottom: '20px', backgroundColor: '#fff', fontSize: '24px' }}>
-        {selectedCard}
-        <button
-          onClick={toggleStar}
-          style={{ position: 'absolute', top: '10px', right: '10px', fontSize: '24px', cursor: 'pointer', background: 'none', border: 'none', color: starredCards.includes(selectedCard) ? '#FFD700' : '#ddd' }}
-        >
-          &#9733;
-        </button>
+    <div className="text-center p-12 font-sans">
+      <h1 className="text-3xl mb-6 text-green-400">Opic Question</h1>
+      {loading ? (
+        <div className="flex justify-center items-center h-48">
+          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-green-400"></div>
+        </div>
+      ) : (
+        <div className="relative  inline-block w-full max-w-xl p-8 border border-gray-300 shadow-lg rounded-xl bg-white text-xl text-black mb-8">
+          {selectedCard}
+          <button
+            onClick={toggleStar}
+            className={`absolute top-4 right-4 text-3xl cursor-pointer ${starredCards.includes(selectedCard) ? 'text-yellow-400' : 'text-gray-300'}`}
+          >
+            &#9733;
+          </button>
+        </div> 
+      )}
+           <div className="mt-4 space-x-4">
+              <button onClick={handlePrevious} className="px-6 py-2 bg-green-400 text-white rounded-lg shadow-md">Previous</button>
+              <button onClick={handleNext} className="px-6 py-2 bg-green-400 text-white rounded-lg shadow-md">Next</button>
+            </div>
+      <div className="text-3xl mt-4">{`0${Math.floor(timeElapsed / 60)}:${(timeElapsed % 60).toString().padStart(2, '0')}`}</div>
+      <div className="mt-4 space-x-4">
+        <button onClick={startTimer} className="px-6 py-2 bg-green-400 text-white rounded-lg shadow-md">Start</button>
+        <button onClick={stopTimer} className="px-6 py-2 bg-green-400 text-white rounded-lg shadow-md">Stop</button>
+        <button onClick={resetTimer} className="px-6 py-2 bg-green-400 text-white rounded-lg shadow-md">Reset</button>
       </div>
-      <div style={{ fontSize: '36px', marginTop: '20px' }}>{`0${Math.floor(timeElapsed / 60)}:${(timeElapsed % 60).toString().padStart(2, '0')}`}</div>
-      <div style={{ marginTop: '20px' }}>
-        <button onClick={startTimer} style={{ padding: '10px 20px', fontSize: '18px', margin: '0 5px', border: 'none', borderRadius: '5px', cursor: 'pointer', backgroundColor: '#007BFF', color: 'white' }}>Start</button>
-        <button onClick={stopTimer} style={{ padding: '10px 20px', fontSize: '18px', margin: '0 5px', border: 'none', borderRadius: '5px', cursor: 'pointer', backgroundColor: '#007BFF', color: 'white' }}>Stop</button>
-        <button onClick={resetTimer} style={{ padding: '10px 20px', fontSize: '18px', margin: '0 5px', border: 'none', borderRadius: '5px', cursor: 'pointer', backgroundColor: '#007BFF', color: 'white' }}>Reset</button>
-      </div>
-      <div style={{ marginTop: '20px' }}>
-        <button onClick={toggleRecording} style={{ padding: '10px 20px', fontSize: '18px', margin: '0 5px', border: 'none', borderRadius: '5px', cursor: 'pointer', backgroundColor: '#007BFF', color: 'white' }}>
-          {isRecording ? 'Stop Recording' : 'Start Recording'}
-        </button>
-      </div>
-      <div style={{ marginTop: '20px', fontSize: '18px', color: '#333' }}>{transcript}</div>
-      <div style={{ marginTop: '20px' }}>
-        <a href="/" style={{ fontSize: '18px', color: '#007BFF', textDecoration: 'none' }}>Next Question</a>
-        <a href="/starred" style={{ fontSize: '18px', color: '#007BFF', textDecoration: 'none', marginLeft: '20px' }}>View Starred Questions</a>
+
+      <div className="mt-8 space-x-4">
+
+        <a href="/starred" className="text-lg text-green-400 hover:underline">View Starred Questions</a>
       </div>
     </div>
   );
