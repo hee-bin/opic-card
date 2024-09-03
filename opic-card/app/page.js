@@ -3,38 +3,120 @@
 import { useState, useEffect } from 'react';
 
 const cards = [
-  // Questions about Your Residence
-  "Can you describe the house or apartment you are currently living in? What is the layout like?",
-  "What do you like and dislike about living in your house or apartment?",
-  // Questions about Leisure Activities
-  "Tell me about the movies or TV shows you enjoy watching during your free time. What genres do you prefer?",
-  "Do you often visit museums? Describe your most recent visit to a museum.",
-  "What activities do you usually do in the park? Describe your experiences in the park.",
-  // Questions about Hobbies or Interests
-  "How do you listen to music? What types of music do you usually enjoy?",
-  "Talk about a book you recently read or a book that you particularly like.",
-  // Questions about Exercise
-  "Do you go jogging regularly? Describe where you usually jog and your experience with it.",
-  "Do you enjoy swimming? Talk about how you started swimming and your feelings about it?",
-  "How do you incorporate walking into your daily life? What are the benefits of walking?",
-  "If you practice yoga, what kind of yoga do you do, and how did you get started?",
-  "Tell me about your hiking experiences. Where do you usually go, and do you have any memorable hikes?",
-  // Impromptu Questions - Travel-Related
-  "If you were to travel with your family, what kind of destination would you choose? Why?",
-  "Describe a memorable experience from one of your travels.",
-  // Impromptu Questions - Food-Related
-  "Do you often eat out with your family? Talk about your favorite restaurant or type of food.",
-  "If you cook at home, what kind of food do you usually prepare, and how do you go about it?",
-  // Impromptu Questions - Shopping-Related
-  "Share a recent shopping experience where you bought something for your family. What did you purchase?",
-  "Do you prefer online shopping or in-store shopping? Explain your preference.",
-  // Impromptu Questions - Weather/Climate-Related
-  "Describe the climate of the area where you live. How does it affect your daily life?",
-  "How has the recent weather impacted your family's activities?",
-  // Impromptu Questions - Technology/Appliances-Related
-  "Which household appliance do you find most useful at home? Explain why.",
-  "Have you purchased any new appliances or technology recently? Talk about it."
-];
+    // Questions about Your Residence
+    "Please tell me about your house. What's your favorite room? What does it look like? Why do you like that room?",
+    "Compare the home you lived in before to the one you live in now. What are the differences between those two homes? Provide me with as many details as possible.",
+    "Have you ever had any problems with your home? What was the problem and how did you deal with it? How did the problem turn out? Give me as many details as possible.",
+  
+    // Questions about Your Neighborhood
+    "I would like to know about your neighborhood. What does your neighborhood look like? Please describe your neighborhood in as much detail as possible.",
+    "Can you tell me about your neighbors? Describe one of your neighbors in detail. How did you first become acquainted with that neighbor? Are you close to the person? What do you usually do together?",
+    "Please tell me about a memorable experience you had in your neighborhood. When and where did it occur? What happened that made the experience so memorable? Please describe it in detail.",
+  
+    // Questions about Movies
+    "In your background survey, you indicated that you like to watch movies. What kind of movies do you enjoy watching? Why do you like to watch those kinds of movies? Tell me about those movies in as much detail as possible.",
+    "I'd like you to tell me about your favorite actor. Who is the actor? What movies has he or she starred in? What do you like most about him or her? Please tell me about the actor in as much detail as possible.",
+    "Please tell me about the most memorable movie you have seen. What was the movie about? Who was in it? Why was it memorable?",
+    "Has your taste in movies changed over time? Tell me about the changes in your taste in movies over the past few years. How are the movies you enjoy now different from those in the past? Please explain in as much detail as possible.",
+    "I'd like to know about a major issue or concern affecting the movie industry these days. What's the issue? How is it affecting the lives of people? What needs to be done to address the issue? Please explain in detail.",
+  
+    // Questions about TV Programs
+    "I would like to know about the TV programs you watch. What kind of programs do you enjoy the most? What are they about? Why do you like watching them? Tell me about them in as much detail as possible.",
+    "What's the most memorable TV program you have ever watched? What was it about? Tell me about the program and explain what made it so special.",
+    "What was the first TV program you liked to watch? What kind of programs do you watch now? How has your interest in TV programs changed over the years? Why has it changed?",
+    "Reality shows are usually filmed in unique locations. Where does your favorite reality show take place? What does this place look like? Provide as many details as possible.",
+    "In your background survey, you indicated that you enjoyed watching reality shows. When do you watch them? Why do you usually watch them? Why do you like to watch them?",
+  
+    // Questions about Coffee Shops
+    "In your background survey, you indicated that you like going out for coffee. When do you usually go to coffee shops? What do you typically order, and what do you do while you are there?",
+    "Tell me about your favorite coffee shop. Where is it located? What does it look like? Describe it in as much detail as possible.",
+    "Tell me about a memorable experience you had at a coffee shop. When and where was it? Who were you with? What happened? Talk about the experience in detail and explain why it was so memorable.",
+  
+    // Questions about Music
+    "Tell me about your favorite musician or singer. What kind of songs does he or she sing? Why do you like him or her? Describe him or her in as much detail as possible.",
+    "In your background survey, you indicated that you enjoy listening to music. What kind of music do you like? Why do you like it? When and where do you usually listen to music? How do you listen to music?",
+    "Tell me about the most memorable experience you had while listening to music. When was it? Where did it happen? What made the experience memorable? Please describe it in as much detail as possible.",
+    "I would like you to choose two genres of music you like and compare them. What are the differences between them? How do you feel when you listen to each type of music? Provide as much detail as possible.",
+    "What kind of devices do people like to listen to music on? Can you tell me about the popular ones? Why do people like them? Please explain about the devices in as much detail as possible.",
+  
+    // Questions about Books
+    "In your background survey, you indicated that you enjoy reading books. How often do you read books? Where do you usually read? What kind of books do you like to read and why? Provide as many details as possible.",
+    "Please tell me about the most memorable book that you have read. What genre is it? What is the book about? Who is the author of the book? Why is it so unforgettable?",
+    "What made you interested in reading? When did you first start reading books? Did anyone influence this decision? How has reading affected your life?",
+  
+    // Questions about Exercise
+    "In your background survey, you indicated that you go to the fitness club. Tell me about the fitness club you go to. Where is it located? What does it look like? Describe it in as much detail as possible.",
+    "In your background survey, you mentioned that you like to jog. Do you have a specific place you like to go for jogging? Where is it located? Why do you go to this specific place? Provide me with as many details as possible.",
+    "Please choose one sport, such as swimming or cycling, and compare it with jogging. Are there any similarities between the two? What are the differences between them? Please talk about the activities in detail.",
+    "When did you first become interested in jogging? Why did you start? Has your physical condition changed since you started jogging? How has it changed?",
+    "In your background survey, you indicated that you enjoy taking walks. Has anything memorable or special ever happened while you were on a walk? When was it, and what happened? Where were you when this happened? Who were you with? Provide as many details as possible.",
+    "People occasionally get hurt when exercising. For example, they might twist their ankles or sprain their knees. Have you ever injured yourself while you were jogging? What kind of injury did you get? Do you do anything special to avoid injuries? What do you do?",
+  
+    // Questions about Travel
+    "What is the most memorable experience you have had while traveling? When and where did you go? What happened? Why was it memorable? Describe the experience in detail.",
+    "In your background survey, you indicated that you enjoy domestic travel. Where do you like to visit? Which do you prefer: mountains or beaches? Describe the place you like to visit and why you like to go there.",
+    "People must prepare before they travel. What do you do to prepare for travel? Do you research in advance or make reservations? What special things do you do? Please describe your preparation in detail.",
+  
+    // Questions about Family Responsibilities
+    "How are the responsibilities divided among family members in your household? What tasks do you usually do? Which ones do the others do? Is the system fair, or do you think it should be changed?",
+  
+    // Questions about Restaurants
+    "I would like to know about the restaurant you often visit. What kind of dishes does it serve? What do you like about the restaurant? What does it look like?",
+  
+    // Questions about Internet and Websites
+    "Do you often surf the internet? What websites do you like? What were websites like in the past? How have they changed since you first started surfing the internet? Please compare the websites of today to the websites of the past.",
+  
+    // Questions about Holidays
+    "I would like to know about the holidays celebrated in your country. What do these holidays commemorate? How do people celebrate them?",
+  
+    // Questions about Public Transportation
+    "Can you tell me about the public transportation system in your country? Which type of transportation do you use the most and why? Give me as many details as possible.",
+  
+    // Questions about Seasons
+    "I would like to know about the seasons in your country. How many seasons are there? How are they different? What's the weather like in each season?",
+  
+    // Questions about Furniture
+    "What is your favorite piece of furniture in the house? How do you use it? What makes it special? Give me as many details as possible.",
+  
+    // Questions about Banks
+    "Have there been any changes to the banks in your country since you were a child? How were they in the past? How are they now? Please describe the changes in detail.",
+  
+    // Questions about Community Events
+    "Can you tell me about special events in your community? What kind of festivals or events are held? Give me as much detail as possible.",
+  
+    // Questions about Geographic Features
+    "I would like to know about the geographic features of your country. What makes them different from other countries? Please describe them in as much detail as possible.",
+  
+    // Questions about Hotels
+    "Tell me about the hotels in your country. Where are they usually located? Do they have any facilities that are unique to your country? Give as many details as possible.",
+  
+    // Questions about Recycling
+    "Tell me about recycling in your country. What kind of items do people usually recycle? Please describe the recycling system in your country in detail.",
+  
+    // Role-Playing - Cooking Italian Food
+    "I like to cook Italian food. Please ask me three or four questions about cooking Italian food.",
+  
+    // Role-Playing - Traveling
+    "I enjoy traveling too. Please ask me three or four questions about traveling.",
+  
+    // Role-Playing - Geographic Features of Canada
+    "I live in Canada. Ask me three or four questions about the geographic features of my country.",
+  
+    // Role-Playing - Gym Membership
+    "Imagine you would like to join a gym. Ask the gym manager three or four questions to find out more about the place.",
+  
+    // Role-Playing - Hotel Reservation
+    "You are planning on staying at a hotel. Call the manager and ask three or four questions about the reservation you would like to make.",
+  
+    // Role-Playing - Library Problem
+    "Pretend that you've gone to the library to look for a book, but the one you want has been checked out. Explain the situation to a librarian and offer two or three alternatives to solve the problem.",
+  
+    // Role-Playing - Restaurant Reservation
+    "Imagine that you would like to have dinner at a downtown restaurant tomorrow evening. Unfortunately, most of the tables have already been reserved for tomorrow, and the remaining tables are for VIPs. Call the manager and give two or three reasons why you should be given a reservation.",
+  
+    // Role-Playing - Meeting with a Friend
+    "You would like to meet up with a friend. Call your friend and figure out the details of your meeting."
+  ];
 
 export default function Home() {
   const [selectedCard, setSelectedCard] = useState('');
